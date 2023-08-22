@@ -3,8 +3,31 @@
 This features the set of scripts to aggregate the 'Box the Jets' workflow, 
 which asks volunteers to annotate the start and end of jets and also draw a box around them.
 
+## Getting the data
+
+Be sure to install all the dependencies for the analysis. Check the main README for more details.
+
 ### Preparing the aggregation pipeline
 To get the extracts, you will need the workflow export as well as the classification exports from the Zooniverse project builder. Open [zooniverse.org/lab](https://www.zooniverse.org/lab), select the Solar Jet Hunter project and go to the Data Exports tab. Click on "Request new workflow classification export" and select the "Box the Jets" workflow. You will receive and email when these are ready. The workflow export does not generally need to be regenerated, unless the workflows have been changed, so we can just download the existing one. Save both these files in a directory. In this repo the workflow files are in the main folder, and the classifications will be saved in this folder. 
+
+The workflow export does not generally need to be regenerated, unless the workflows have been changed, so we can just download the existing one by clicking on the "download your data export" next to "Request new workflow export". Save this file in the main directory.
+
+For the classifications export, click on "Request new workflow classification export" and select the "Jet or Not" workflow and click "Export". You will receive and email when these are ready. Save this file in the `JetOrNot/` directory.
+
+Alternatively, you can download the new classifications directly. Install the `panoptes-cli` module with pip:
+```bash
+pip install panoptescli
+```
+
+Configure your Zooniverse account by entering your username and password:
+```bash
+panoptes configure
+```
+
+Now, in the `JetOrNot/` folder, you can run the following command to generate and download the classification data for this workflow:
+```bash
+panoptes workflow download-classifications -g 19650 box-the-jets-classifications.csv
+```
 
 ### Aggregating the data
 Open a terminal in the directory where both those CSVs are and make sure that `panoptes_aggregation` is installed. Then, we will create the extractor and reducer configurations for the panoptes aggregation module by running:
@@ -17,12 +40,12 @@ panoptes_aggregation config ../solar-jet-hunter-workflows.csv 19650
 `Reducer_config_workflow_19650_V4.52_shape_extractor_rotateRectangle.yaml`:
 ```yaml
 reducer_config:
-    shape_reducer_hdbscan:
+    shape_reducer_dbscan:
         shape: rotateRectangle
-        min_cluster_size: 2
-        min_samples: 2
+        min_samples: 3
         allow_single_cluster: True
         metric_type: IoU
+        eps: 0.6
 ```
 
 

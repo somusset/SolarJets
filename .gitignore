@@ -130,9 +130,16 @@ dmypy.json
 
 # images
 *.png
+*.pdf
 
 # data
 *.csv
 
 # Mac extras
 .DS_Store
+
+# ignore data outputs
+*.json
+*.npy
+*.gif
+*.yaml
