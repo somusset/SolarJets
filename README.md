@@ -11,8 +11,14 @@ python3 -m pip install -r requirements.txt
 ### Windows users
 Some more steps might be needed, as described [here](Installation_windows.md).
 
-# Usage
+## One-time panoptes-cli configuration
+You need to configure the panoptes client with your Zooniverse username and password:
+```bash
+panoptes configure
+```
+This is done only the first time, right after the installation.
 
+# Usage
 
 ``` bash
 # Start in the JetOrNot directory
