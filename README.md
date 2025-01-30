@@ -50,7 +50,7 @@ This will create, for each workflow, an extractor configuration file, a reducer 
 
 ### Modifications to the configuration files
 
-Recommended change in `Extractor_config_workflow_25059_Vx.xx`:     
+#### Recommended change in `Extractor_config_workflow_25059_Vx.xx`:     
 by default, the configuration file restricts the workflow version to a specific value. However any small change to the Zooniverse project might have triggered a change in version number, so it is recommended to change
 ```yaml
 workflow_version: '2.15'
