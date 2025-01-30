@@ -37,7 +37,8 @@ The BoxTheJet classifications report, in the `/BoxTheJets` directory
 cd ../BoxTheJets
 panoptes workflow download-classifications 21225 box-the-jets-classifications.csv
 ```
-    Note that if you need to generate a new classification report, the keyword `--generate` should be added at the end of that line. Otherwise only the classification report that was last generated will be downloaded (that may exclude the newest classification data).
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming. that if you need to generate a new classification report, the keyword `--generate` should be added at the end of that line. Otherwise only the classification report that was last generated will be downloaded (that may exclude the newest classification data).
     
 ## Generate the configuration files
 ### Generation of the files using panoptes
