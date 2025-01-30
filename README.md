@@ -8,6 +8,8 @@ To install the required python modules, run the following in main repo folder:
 ```bash
 python3 -m pip install -r requirements.txt
 ```
+### Windows users
+Some more steps might be needed, as described [here](Installation_windows.md).
 
 # Usage
 
