@@ -37,7 +37,7 @@ echo ""
 # get and create the subject metadata
 cd .. &&
 panoptes project download -t subjects 11265 solar-jet-hunter-subjects.csv &&
-python3 scripts/create_subject_metadata.py
+python scripts/create_subject_metadata.py
 
 echo ""
 
@@ -49,7 +49,7 @@ panoptes_aggregation extract ../BoxTheJets/box-the-jets-classifications.csv\
 
 # squash the frames
 cd .. &&
-python3 scripts/squash_frames.py
+python scripts/squash_frames.py
 
 echo ""
 
@@ -67,7 +67,7 @@ panoptes_aggregation reduce ../extracts/question_extractor_box_the_jets.csv \
 
 echo ""
 # get the unique jets
-cd .. && python3 scripts/get_unique_jets.py && python3 scripts/cluster_jets_by_sol.py
+cd .. && python scripts/get_unique_jets.py && python scripts/cluster_jets_by_sol.py
 
 # finally separate out and combine the question tasks
-python3 scripts/process_question_tasks.py
+python scripts/process_question_tasks.py
