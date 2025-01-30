@@ -9,8 +9,8 @@ To install the required python modules, run the following in main repo folder:
 ```bash
 python3 -m pip install -r requirements.txt
 ```
-### Windows users
-Some more steps might be needed, as described [here](Installation_windows.md).
+> [!WARNING]  
+> For Windows users, some more steps might be needed, as described [here](Installation_windows.md).
 
 ## One-time panoptes-cli configuration
 You need to configure the panoptes client with your Zooniverse username and password:
