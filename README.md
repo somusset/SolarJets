@@ -48,10 +48,19 @@ panoptes_aggregation config solar-jet-hunter-workflows.csv 21225
 ```
 This will create, for each workflow, an extractor configuration file, a reducer configuration file, and a task labels file.
 
-### Required modifications to the configuration files
-Some modifications and additions must be performed to these configuration files.
+### Modifications to the configuration files
 
-TO BE DETAILED HERE
+Recommended change in `Extractor_config_workflow_25059_Vx.xx`:     
+by default, the configuration file restricts the workflow version to a specific value. However any small change to the Zooniverse project might have triggered a change in version number, so it is recommended to change
+```yaml
+workflow_version: '2.15'
+```
+to
+```yml
+workflow_version: {'min': '2.15'}
+```
+(with the actual version number that you might want here).
+
 
 ## Aggregation
 
