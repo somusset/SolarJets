@@ -50,7 +50,8 @@ This will create, for each workflow, an extractor configuration file, a reducer 
 
 ### Modifications to the configuration files
 
-#### Recommended change in `Extractor_config_workflow_25059_Vx.xx`:     
+#### Recommended change in extractor files
+e.g. in `Extractor_config_workflow_25059_Vx.xx`:     
 by default, the configuration file restricts the workflow version to a specific value. However any small change to the Zooniverse project might have triggered a change in version number, so it is recommended to change
 ```yaml
 workflow_version: '2.15'
@@ -60,6 +61,42 @@ to
 workflow_version: {'min': '2.15'}
 ```
 (with the actual version number that you might want here).
+
+#### Necessary addition to the extractor file for BoxTheJets
+In the extractor file for BoxTheJet `Extractor_config_workflow_21225_Vxx.xx`, you may notice that only a question extractor is present. Two shape extractors need to be added for the temporal point tool and for the temporal rotate rectangle tools. After these additions the entire file should be very similar to the following:
+```yaml
+extractor_config:
+    shape_extractor_temporalPoint:
+    -   details: {}
+        task: T0
+        shape: temporalPoint
+        tools:
+        - 0
+        - 1
+    -   details: {}
+        task: T3
+        shape: temporalPoint
+        tools:
+        - 0
+        - 1
+    shape_extractor_temporalRotateRectangle:
+    -   details: {}
+        shape: temporalRotateRectangle
+        task: T0
+        tools:
+        - 2
+    -   details: {}
+        shape: temporalRotateRectangle
+        task: T3
+        tools:
+        - 2
+    question_extractor:
+    -   task: T1
+    -   task: T2
+    -   task: T5
+workflow_id: 21225
+workflow_version: {'min':'50.63'}
+```
 
 
 ## Aggregation
