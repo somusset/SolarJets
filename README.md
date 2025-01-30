@@ -37,7 +37,8 @@ The BoxTheJet classifications report, in the `/BoxTheJets` directory
 cd ../BoxTheJets
 panoptes workflow download-classifications 21225 box-the-jets-classifications.csv
 ```
-
+    Note that if you need to generate a new classification report, the keyword `--generate` should be added at the end of that line. Otherwise only the classification report that was last generated will be downloaded (that may exclude the newest classification data).
+    
 ## Generate the configuration files
 ### Generation of the files using panoptes
 If configuration files are not present in the `/configs` directory, then they need to be created, for each of the workflows:
@@ -96,6 +97,29 @@ extractor_config:
     -   task: T5
 workflow_id: 21225
 workflow_version: {'min':'50.63'}
+```
+#### Necessary addition of reducer files for BoxTheJets
+We need to add two reducer configuration files for BoxTheJets, to match the addition of the two shape extractors in the extractor configuration file (above).
+
+The first reducer file to be created should be named `Reducer_config_workflow_21225_V50.59_pointExtractor_temporalPoint.yaml` (with the correct workflow version number) and should contain the following:
+```yaml
+reducer_config:
+    temporal_point_reducer_hdbscan:
+        min_cluster_size: 3
+        min_samples: 3
+        allow_single_cluster: True
+```
+
+The second reducer file should be named `Reducer_config_workflow_21225_V50.59_shapeExtractor_temporalRotateRectangle.yaml` and should contain the following:
+```yaml
+reducer_config:
+    shape_reducer_dbscan:
+        shape: temporalRotateRectangle
+        min_samples: 4
+        allow_single_cluster: True
+        metric_type: IoU
+        eps: 0.5
+        eps_t: 0.4
 ```
 
 
