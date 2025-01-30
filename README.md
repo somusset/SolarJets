@@ -126,7 +126,17 @@ reducer_config:
 
 ## Aggregation
 
+To run the aggregation, one only need to run the script `scripts/do_aggregation` while in the base directory. This script will go through the following steps:
+1. Extract the classifications for the JetOrNot workflow, using the associated extractor configuration file
+2. Reduction of the classfications using the reducer configuration file
+3. Creation of the subject metadata json file: `solar_jet_hunter_metadata.json`
+4. Extract the classifications for the BoxTheJets workflow
+5. Squashing the frames: classifications for different jets in the same subjects are combined together
+6. Reduction of the data for each reducer, leading to the creation of three csv files (`question_reducer_box_the_jets.csv`,`shape_reducer_dbscan_box_the_jets.csv`, and `temporal_point_reducer_hdbscan_box_the_jets.csv`)
+7. Filter the results into jets, defined each by a box and a base point. The result is saved in `jets.json`
+8. Cluster jets from different subjects that are associated with the same original HEK CJ event. The result is saved in `jet_clusters.json`.
 
+## The following notes might be obsolete (cleaning in progress)
 
 ``` bash
 # Start in the JetOrNot directory
