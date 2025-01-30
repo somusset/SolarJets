@@ -14,7 +14,7 @@ except ModuleNotFoundError:
 
 data = ascii.read('reductions/question_reducer_jet_or_not.csv', format='csv')
 subjects = np.unique(data['subject_id'])
-subject_metadata = pd.read_csv('../solar-jet-hunter-subjects.csv').to_dict(orient='list')
+subject_metadata = pd.read_csv('solar-jet-hunter-subjects.csv').to_dict(orient='list')
 for key in subject_metadata.keys():
     subject_metadata[key] = np.asarray(subject_metadata[key])
 
