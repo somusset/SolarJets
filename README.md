@@ -23,23 +23,35 @@ This is done only the first time, right after the installation.
 ## Download data
 Before doing the aggregation, one needs to download some data from the Zooniverse project. In these instructions we use the panotpes client but in principle these files can be downloaded directly from the project lab website.
 
-We need the workflows repor
+We need the workflows report
 ```bash 
 panoptes project download -t workflows 11265 solar-jet-hunter-workflows.csv
 ```
-The JetOrNot classifications report, in the JetOrNot directory
+The JetOrNot classifications report, in the `/JetOrNot` directory
 ```bash
 cd JetOrNot
 panoptes workflow download-classifications 25059 jet-or-not-classifications.csv
 ```
-The BoxTheJet classifications report, in the BoxTheJets directory
+The BoxTheJet classifications report, in the `/BoxTheJets` directory
 ```bash
 cd ../BoxTheJets
 panoptes workflow download-classifications 21225 box-the-jets-classifications.csv
 ```
 
 ## Generate the configuration files
+### Generation of the files using panoptes
+If configuration files are not present in the `/configs` directory, then they need to be created, for each of the workflows:
+```bash
+cd ../configs
+panoptes_aggregation config solar-jet-hunter-workflows.csv 25059
+panoptes_aggregation config solar-jet-hunter-workflows.csv 21225
+```
+This will create, for each workflow, an extractor configuration file, a reducer configuration file, and a task labels file.
 
+### Required modifications to the configuration files
+Some modifications and additions must be performed to these configuration files.
+
+TO BE DETAILED HERE
 
 ## Aggregation
 
