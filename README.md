@@ -3,6 +3,7 @@ Tools and scripts for working with the SolarJets zooniverse project.
 
 In this README file we go through the workflow of this package, specifically the order in which the aggregation in run. The ipynb notebooks contained in this directory are listed with their primary function and when they can be usefull to open. 
 
+# Installation
 ## Requirements
 To install the required python modules, run the following in main repo folder:
 ```bash
@@ -19,6 +20,30 @@ panoptes configure
 This is done only the first time, right after the installation.
 
 # Usage
+## Download data
+Before doing the aggregation, one needs to download some data from the Zooniverse project. In these instructions we use the panotpes client but in principle these files can be downloaded directly from the project lab website.
+
+We need the workflows repor
+```bash 
+panoptes project download -t workflows 11265 solar-jet-hunter-workflows.csv
+```
+The JetOrNot classifications report, in the JetOrNot directory
+```bash
+cd JetOrNot
+panoptes workflow download-classifications 25059 jet-or-not-classifications.csv
+```
+The BoxTheJet classifications report, in the BoxTheJets directory
+```bash
+cd ../BoxTheJets
+panoptes workflow download-classifications 21225 box-the-jets-classifications.csv
+```
+
+## Generate the configuration files
+
+
+## Aggregation
+
+
 
 ``` bash
 # Start in the JetOrNot directory
