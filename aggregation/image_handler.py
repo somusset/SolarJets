@@ -79,6 +79,8 @@ def world_from_pixel(subject_id: int, x, y, metadata):
         'crpix1': metadata['#crpix1'],  # Pixel coordinate at reference point naxis1
         'crpix2': metadata['#crpix2'],  # Pixel coordinate at reference point naxis2
         'crota2': metadata['#crota2'],  # Rotation of the horizontal and vertical axes in degrees
+        'date-obs': str(metadata['startDate']),
+        'telescop': 'SDO/AIA',
     }
 
     # Create an empty map
@@ -101,4 +103,4 @@ def world_from_pixel(subject_id: int, x, y, metadata):
     pix_y = axis_y_normalized * fits_height
 
     # Call on Sunpy to finish the pixel_to_world conversion
-    return map.pixel_to_world(pix_x * u.pix, pix_y * u.pix)
+    return map.wcs.pixel_to_world(pix_x * u.pix, pix_y * u.pix)
