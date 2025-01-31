@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from .zoo_utils import get_subject_image
 from .jet import Jet
+from .shape_utils import BasePoint
 import tqdm
 from dataclasses import dataclass, field
 import datetime
@@ -12,6 +13,7 @@ class JetCluster:
     jets: list[Jet]
     start_time: datetime.datetime = field(init=False)
     end_time: datetime.datetime = field(init=False)
+    base_location: BasePoint
 
     def __post_init__(self):
         '''
@@ -19,6 +21,7 @@ class JetCluster:
         '''
         self.start_time = self.jets[0].time_info['start']
         self.end_time = self.jets[-1].time_info['end']
+        self.base_location = self.jets[0].start
 
     @classmethod
     def from_dict(cls, data):
