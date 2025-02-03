@@ -179,6 +179,27 @@ class SubjectMetadata:
             print(f'ERROR: no data can be found between {start_date} - {end_date} in {self.file_name}')
             return np.asarray([])
 
+    def get_pix2arcsec_conv_by_id(self, subject:int):
+        '''
+        Returns a factor to convert between a distance measured in pixels in the subject (png or mp4)
+        to the distance in arcsec, using the #naxis and #cdelt keywords of the fits files
+        '''
+        naxis1 = self.get_subjectkeyvalue_by_id(subject, '#naxis1')
+        naxis2 = self.get_subjectkeyvalue_by_id(subject, '#naxis2')
+        cdelt1 = self.get_subjectkeyvalue_by_id(subject, '#cdelt1')
+        cdelt2 = self.get_subjectkeyvalue_by_id(subject, '#cdelt2')
+        im_ll_x = self.get_subjectkeyvalue_by_id(subject, '#im_ll_x')
+        im_ll_y = self.get_subjectkeyvalue_by_id(subject, '#im_ll_y')
+        im_ur_x = self.get_subjectkeyvalue_by_id(subject, '#im_ur_x')
+        im_ur_y = self.get_subjectkeyvalue_by_id(subject, '#im_ur_y')
+        width = self.get_subjectkeyvalue_by_id(subject, '#width')
+        height = self.get_subjectkeyvalue_by_id(subject, '#height')
+
+        factor1 = naxis1*cdelt1/((im_ur_x-im_ll_x)*width)
+        factor2 = naxis2*cdelt2/((im_ur_y-im_ll_y)*height)
+
+        return np.mean([factor1,factor2])
+
     def get_subjectdata_by_id(self, subject: int):
         '''
         Get an array of metadata for the subject
