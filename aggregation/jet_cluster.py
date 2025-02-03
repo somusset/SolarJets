@@ -14,6 +14,7 @@ class JetCluster:
     start_time: datetime.datetime = field(init=False)
     end_time: datetime.datetime = field(init=False)
     base_location: BasePoint
+    hek_event: str
 
     def __post_init__(self):
         '''
@@ -22,19 +23,25 @@ class JetCluster:
         self.start_time = self.jets[0].time_info['start']
         self.end_time = self.jets[-1].time_info['end']
         self.base_location = self.jets[0].start
+        self.hek_event = self.jets[0].sol_standard
 
     @classmethod
     def from_dict(cls, data):
         jets = []
-        for jet_dict in data:
+        #for jet_dict in data:
+        for jet_dict in data['jets']:
             jets.append(Jet.from_dict(jet_dict))
 
-        return cls(jets)
+        #obj = cls(jets=jets, start_time=data['start_time'], end_time=data['end_time'])
+        obj = cls(jets=jets)
+        return obj
 
     def to_dict(self):
         return {
             'start_time': self.start_time,
             'end_time': self.end_time,
+            'base_location': self.base_location,
+            'hek_event': self.hek_event,
             'jets': [jet.to_dict() for jet in self.jets]
         }
 
