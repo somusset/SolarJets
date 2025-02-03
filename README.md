@@ -136,7 +136,27 @@ To run the aggregation, one only need to run the script `scripts/do_aggregation`
 7. Filter the results into jets, defined each by a box and a base point. The result is saved in `jets.json`
 8. Cluster jets from different subjects that are associated with the same original HEK CJ event. The result is saved in `jet_clusters.json`.
 
-## The following notes might be obsolete (cleaning in progress)
+# Outputs
+
+To open the file `jets.json`:
+```python
+import json
+from aggregation.jet import Jet
+
+with open('reductions/jets.json', 'r') as infile:
+    jets = [Jet.from_dict(jet) for jet in json.load(infile)]
+```
+
+To open the file `jet_clusters.json`:
+```python
+import json
+from aggregation.jet_cluster import JetCluster
+
+with open('reductions/jet_cluster.json', 'r') as infile:
+    clusters = [JetCluster.from_dict(data) for sol in json.load(infile) for data in sol['events']]
+```
+
+# The following notes might be obsolete (cleaning in progress)
 
 ``` bash
 # Start in the JetOrNot directory
