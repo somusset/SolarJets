@@ -19,6 +19,8 @@ def get_point_data_from_rows(point_rows, tool):
             cluster_x = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_clusters_x']))
             cluster_y = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_clusters_y']))
             cluster_time = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_clusters_displayTime']))
+            cluster_x_var = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_clusters_var_x']))
+            cluster_y_var = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_clusters_var_y']))
         except json.JSONDecodeError:
             continue
 
@@ -28,8 +30,10 @@ def get_point_data_from_rows(point_rows, tool):
         row_labels = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_cluster_labels']))
         row_probs = np.asarray(json.loads(row[f'data.frame0.T0_toolIndex{tool}_cluster_probabilities']))
 
-        for i, (x, y, time) in enumerate(zip(cluster_x, cluster_y, cluster_time)):
+        for i, (x, y, time, var_x, var_y) in enumerate(zip(cluster_x, cluster_y, cluster_time, cluster_x_var, cluster_y_var)):
             point = BasePoint(x=x, y=y, displayTime=time, subject_id=subject_id)
+            point.var_x = var_x
+            point.var_y = var_y
 
             extracts_mask = row_labels == i
             extracts_x = row_x[extracts_mask]
@@ -87,6 +91,7 @@ class Aggregator:
                     cluster_box_h = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_clusters_height']))
                     cluster_box_a = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_clusters_angle']))
                     cluster_box_time = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_clusters_displayTime']))
+                    cluster_box_sigma = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_clusters_sigma']))
                 except json.JSONDecodeError:
                     continue
 
@@ -98,8 +103,9 @@ class Aggregator:
                 row_box_time = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_temporalRotateRectangle_displayTime']))
                 row_box_labels = np.asarray(json.loads(row['data.frame0.T0_toolIndex2_cluster_labels']))
 
-                for i, (x, y, w, h, a, time) in enumerate(zip(cluster_box_x, cluster_box_y, cluster_box_w, cluster_box_h, cluster_box_a, cluster_box_time)):
+                for i, (x, y, w, h, a, time, sigma) in enumerate(zip(cluster_box_x, cluster_box_y, cluster_box_w, cluster_box_h, cluster_box_a, cluster_box_time, cluster_box_sigma)):
                     box = Box(xcenter=x, ycenter=y, width=w, height=h, angle=np.radians(a), displayTime=time, subject_id=subject_id)
+                    box.sigma = sigma
 
                     extracts_mask = row_box_labels == i
                     extracts_x = row_box_x[extracts_mask]

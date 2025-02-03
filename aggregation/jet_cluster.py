@@ -37,13 +37,22 @@ class JetCluster:
         return obj
 
     def to_dict(self):
-        return {
-            'start_time': self.start_time,
-            'end_time': self.end_time,
-            'base_location': self.base_location,
-            'hek_event': self.hek_event,
-            'jets': [jet.to_dict() for jet in self.jets]
-        }
+        data = {}
+        data['start_time'] = self.start_time
+        data['end_time'] = self.end_time
+        data['base_location'] = self.base_location.to_dict()
+        data['hek_event'] = self.hek_event
+        data['jets'] = [jet.to_dict() for jet in self.jets]
+
+        return data
+#        return {
+#            'start_time': self.start_time,
+#            'end_time': self.end_time,
+#            'base_location': self.base_location.to_dict(),
+#            'hek_event': self.hek_event,
+#            'jets': [jet.to_dict() for jet in self.jets]
+#        }
+
 
     def create_gif(self, output):
         '''

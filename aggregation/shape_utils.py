@@ -29,6 +29,11 @@ class BasePoint:
         data['displayTime'] = self.displayTime
         data['probability'] = self.probability
 
+        if hasattr(self, 'var_x'):
+            data['var_x'] = self.var_x
+        if hasattr(self, 'var_y'):
+            data['var_y'] = self.var_y
+
         if hasattr(self, 'extracts'):
             data['extracts'] = [ext.to_dict() for ext in self.extracts]
 
@@ -37,6 +42,11 @@ class BasePoint:
     @classmethod
     def from_dict(cls, data):
         obj = cls(x=data['x'], y=data['y'], displayTime=data['displayTime'], subject_id=data['subject_id'], probability=data['probability'])
+
+        if 'var_x' in data:
+            obj.var_x = data['var_x']
+        if 'var_y' in data:
+            obj.var_y = data['var_y']
 
         if 'extracts' in data:
             obj.extracts = []
@@ -105,6 +115,9 @@ class Box:
         data['displayTime'] = self.displayTime
         data['probability'] = self.probability
 
+        if hasattr(self, 'sigma'):
+            data['sigma'] = self.sigma
+
         if hasattr(self, 'extracts'):
             data['extracts'] = [ext.to_dict() for ext in self.extracts]
 
@@ -114,6 +127,9 @@ class Box:
     def from_dict(cls, data):
         obj = cls(xcenter=data['xcenter'], ycenter=data['ycenter'], width=data['width'], height=data['height'],
                   angle=data['angle'], displayTime=data['displayTime'], subject_id=data['subject_id'], probability=data['probability'])
+
+        if 'sigma' in data:
+            obj.sigma = data['sigma']
 
         if 'extracts' in data:
             obj.extracts = []
