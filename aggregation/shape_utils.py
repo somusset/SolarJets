@@ -5,7 +5,8 @@ from shapely.geometry import Polygon
 from panoptes_aggregation.reducers.shape_metric_IoU import IoU_metric
 from panoptes_aggregation.reducers.point_process_data import temporal_metric
 import yaml
-
+from .meta_file_handler import SubjectMetadata
+from .image_handler import solar_conversion
 
 with open(os.path.join(os.path.split(__file__)[0], '..',
                        'configs/Reducer_config_workflow_21225_V50.59_shapeExtractor_temporalRotateRectangle.yaml'), 'r') as infile:
@@ -60,6 +61,26 @@ class BasePoint:
             self._extract_dists = np.mean(dists)
 
         return self._extract_dists
+
+    def get_hpc_coordinates_values(self, metafile):
+        '''
+        Transform pixel coordinates into solar helioprojective cartesian coordinates
+        using the metadata provided as a SubjectMetadata object
+        '''
+        metadata = metafile.get_subjectdata_by_id(self.subject_id)
+        hpc_x, hpc_y = solar_conversion(self.subject_id, self.x, self.y, metadata)
+
+        return [hpc_x, hpc_y]
+
+# The following was an idea to get some stddev but should not be used as it is not weighted. I'm working on having the variance calculated during aggregation being part of the data in jets 
+
+#    def get_position_stddev(self):
+#        extracts_x = [extract.x for extract in self.extracts]
+#        extracts_y = [extract.y for extract in self.extracts]
+#        x_stddev = np.std(extracts_x)
+#        y_stddev = np.std(extracts_y)
+#        return [x_stddev, y_stddev]
+
 
 
 @dataclass
@@ -127,6 +148,39 @@ class Box:
         rotation = np.array([[np.cos(self.angle), np.sin(self.angle)], [-np.sin(self.angle), np.cos(self.angle)]])
         corners = np.matmul(original_points - centre, rotation) + centre
         return corners
+    
+    def get_hpc_box_corners(self, metafile):
+        metadata = metafile.get_subjectdata_by_id(self.subject_id)
+        corners = self.get_box_edges()
+        hpc_corners = np.array(
+            [
+                solar_conversion(self.subject_id, corners[0][0], corners[0][1], metadata),
+                solar_conversion(self.subject_id, corners[1][0], corners[1][1], metadata),
+                solar_conversion(self.subject_id, corners[2][0], corners[2][1], metadata),
+                solar_conversion(self.subject_id, corners[3][0], corners[3][1], metadata),
+                solar_conversion(self.subject_id, corners[4][0], corners[4][1], metadata),
+            ]
+        )
+        return hpc_corners
+    
+    def get_hpc_box_center(self, metafile):
+        metadata = metafile.get_subjectdata_by_id(self.subject_id)
+        hpc_box_center = solar_conversion(self.subject_id, self.xcenter, self.ycenter, metadata)
+        return hpc_box_center
+
+# The following were a fix, but now it is better to just get the pix to arcsec conversion factor to calculate any distance in arcsec
+
+#    def get_hpc_width(self, metafile):
+#        hpc_corners = self.get_hpc_box_corners(metafile)
+#        length1 = np.sqrt((hpc_corners[0][0]-hpc_corners[1][0])**2 + (hpc_corners[0][1]-hpc_corners[1][1])**2)
+#        length2 = np.sqrt((hpc_corners[1][0]-hpc_corners[2][0])**2 + (hpc_corners[1][1]-hpc_corners[2][1])**2)
+#        return np.min([length1,length2])
+#    
+#    def get_hpc_height(self, metafile):
+#        hpc_corners = self.get_hpc_box_corners(metafile)
+#        length1 = np.sqrt((hpc_corners[0][0]-hpc_corners[1][0])**2 + (hpc_corners[0][1]-hpc_corners[1][1])**2)
+#        length2 = np.sqrt((hpc_corners[1][0]-hpc_corners[2][0])**2 + (hpc_corners[1][1]-hpc_corners[2][1])**2)
+#        return np.max([length1,length2])
 
     def get_shapely_polygon(self):
         return Polygon(self.get_box_edges())
