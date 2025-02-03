@@ -13,8 +13,8 @@ class JetCluster:
     jets: list[Jet]
     start_time: datetime.datetime = field(init=False)
     end_time: datetime.datetime = field(init=False)
-    base_location: BasePoint
-    hek_event: str
+    base_location: BasePoint = field(init=False)
+    hek_event: str = field(init=False)
 
     def __post_init__(self):
         '''
