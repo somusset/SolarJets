@@ -33,8 +33,7 @@ for cluster in clusters:
     # get the time corresponding to the coordinates
     base_time = cluster.base_time
     # create the base coordinate object with the information above
-    base_location = SolarPoint(x=hpc_coordinates[0], y=hpc_coordinates[1], var_x=var_x, var_y=var_y, 
-                               unit='arcsec', coordinate_system='HPC', time=base_time)
+    base_location = SolarPoint(x=hpc_coordinates[0], y=hpc_coordinates[1], var_x=var_x, var_y=var_y, unit='arcsec', coordinate_system='HPC', time=base_time)
 
     # get the bigger box from the jets in the cluster and the associated time
     bbox_jet = cluster.get_jet_with_longer_box()
