@@ -8,6 +8,8 @@ import yaml
 from .meta_file_handler import SubjectMetadata
 from .image_handler import solar_conversion
 import datetime
+from dateutil.parser import parse
+
 
 with open(os.path.join(os.path.split(__file__)[0], '..',
                        'configs/Reducer_config_workflow_21225_V50.59_shapeExtractor_temporalRotateRectangle.yaml'), 'r') as infile:
@@ -115,7 +117,7 @@ class SolarPoint:
 
     @classmethod
     def from_dict(cls, data):
-        obj = cls(x=data['x'], y=data['y'], var_x=data['var_x'], var_y=data['var_y'], unit=data['unit'], coordinate_system=data['coord_syst'], time=data['time'])
+        obj = cls(x=data['x'], y=data['y'], var_x=data['var_x'], var_y=data['var_y'], unit=data['unit'], coordinate_system=data['coord_syst'], time=parse(data['time']))
         return obj
 
 @dataclass

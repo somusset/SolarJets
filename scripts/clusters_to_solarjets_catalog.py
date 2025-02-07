@@ -94,5 +94,19 @@ for cluster in clusters:
 
     solarjets.append(object)
 
+id_list = []
+for jet in solarjets:
+    id_start = 'sjh_'+str(jet.box.center.time)[0:10]+'T'+str(jet.box.center.time)[11:13]+'_'
+    exists = True
+    i=1
+    while exists == True:
+        tag = id_start+str(int(i))
+        if tag in id_list:
+            i=i+1
+        else:
+            exists=False
+            id_list.append(tag)
+    jet.add_jet_id(tag)
+
 with open('reductions/solar_jets.json', 'w') as outfile:
     json.dump([jet.to_dict() for jet in solarjets], outfile, cls=NpEncoder, indent=4)
