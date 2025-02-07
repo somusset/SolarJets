@@ -152,4 +152,4 @@ with open('reductions/jet_cluster_by_event.json', 'w') as outfile:
     json.dump(out_data, outfile, cls=NpEncoder, indent=4)
 
 with open('reductions/jet_cluster.json', 'w') as outfile:
-    json.dump([jet_cluster.to_dict() for jet_cluster in jet_clusters], outfile, cls=NpEncoder, indent=4)
+    json.dump([jet_cluster for event in out_data for jet_cluster in event['events']], outfile, cls=NpEncoder, indent=4)
