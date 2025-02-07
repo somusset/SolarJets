@@ -7,6 +7,7 @@ from panoptes_aggregation.reducers.point_process_data import temporal_metric
 import yaml
 from .meta_file_handler import SubjectMetadata
 from .image_handler import solar_conversion
+import datetime
 
 with open(os.path.join(os.path.split(__file__)[0], '..',
                        'configs/Reducer_config_workflow_21225_V50.59_shapeExtractor_temporalRotateRectangle.yaml'), 'r') as infile:
@@ -91,7 +92,31 @@ class BasePoint:
 #        y_stddev = np.std(extracts_y)
 #        return [x_stddev, y_stddev]
 
+@dataclass
+class SolarPoint:
+    x: float
+    y: float
+    var_x: float
+    var_y: float
+    unit: str
+    coordinate_system: str
+    time: datetime.datetime
 
+    def to_dict(self):
+        data = {}
+        data['x'] = self.x
+        data['y'] = self.y
+        data['var_x'] = self.var_x
+        data['var_y'] = self.var_y
+        data['unit'] = self.unit
+        data['coord_syst'] = self.coordinate_system
+        data['time'] = self.time
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        obj = cls(x=data['x'], y=data['y'], var_x=data['var_x'], var_y=data['var_y'], unit=data['unit'], coordinate_system=data['coord_syst'], time=data['time'])
+        return obj
 
 @dataclass
 class Box:
@@ -201,15 +226,21 @@ class Box:
     def get_shapely_polygon(self):
         return Polygon(self.get_box_edges())
 
-    def get_plus_minus_sigma(self, sigma):
+#    def get_plus_minus_sigma(self, sigma):
+    def get_plus_minus_sigma(self):
+        # calculate the bounding box for the cluster confidence
+        plus_box, minus_box = self.get_plus_minus_boxes()
+        return plus_box.get_box_edges(), minus_box.get_box_edges()
+    
+    def get_plus_minus_boxes(self):
         # calculate the bounding box for the cluster confidence
         plus_sigma, minus_sigma = sigma_shape(
-            [self.xcenter, self.ycenter, self.width, self.height, self.angle], sigma)
+            [self.xcenter, self.ycenter, self.width, self.height, self.angle], self.sigma)
 
         plus_box = Box(*plus_sigma, self.displayTime, self.subject_id)
         minus_box = Box(*minus_sigma, self.displayTime, self.subject_id)
 
-        return plus_box.get_box_edges(), minus_box.get_box_edges()
+        return plus_box, minus_box
 
     @property
     def params(self):
@@ -309,9 +340,14 @@ def scale_shape(params, gamma):
             Parameter corresponding to the box scaled by the factor gamma
     '''
     return [
-        # upper left corner moves
-        params[0] + (params[2] * (1 - gamma) / 2),
-        params[1] + (params[3] * (1 - gamma) / 2),
+        # first two params are box center so these lines do not apply anymore:
+        ## upper left corner moves
+        #params[0] + (params[2] * (1 - gamma) / 2),
+        #params[1] + (params[3] * (1 - gamma) / 2),
+        
+        # box center does not change
+        params[0],
+        params[1],
         # width and height scale
         gamma * params[2],
         gamma * params[3],
@@ -345,3 +381,38 @@ def sigma_shape(params, sigma):
     plus_sigma = scale_shape(params, 1 / gamma)
     minus_sigma = scale_shape(params, gamma)
     return plus_sigma, minus_sigma
+
+@dataclass 
+class SolarBox:
+    center: SolarPoint
+    corners: list[SolarPoint]
+    width: float
+    height: float
+    length_unit: str
+    angle: float
+    angle_unit: str
+
+    def to_dict(self):
+        data = {}
+        data['center'] = self.center.to_dict()
+        data['corners'] = [corner.to_dict() for corner in self.corners]
+        data['width'] = self.width
+        data['height'] = self.height
+        data['angle'] = self.angle
+        data['length_unit'] = self.length_unit
+        data['angle_unit'] = self.angle_unit
+
+        return data
+
+    @classmethod
+    def from_dict(cls, data):
+        center = SolarPoint.from_dict(data['center'])
+        
+        corners = []
+        for corner in data['corners']:
+            ext = SolarPoint.from_dict(corner)
+            corners.append(ext)
+        
+        obj = cls(center=center, corners=corners, width=data['width'], height=data['height'], angle=data['angle'], length_unit=data['length_unit'], angle_unit=data['angle_unit'])
+
+        return obj
