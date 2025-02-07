@@ -153,8 +153,22 @@ import json
 from aggregation.jet_cluster import JetCluster
 
 with open('reductions/jet_cluster.json', 'r') as infile:
+    clusters = [JetCluster.from_dict(data) for data in json.load(infile)]
+```
+or alternatively, if we want to use the file that has another layer to separate the jets into the different HEK events:
+```python
+with open('reductions/jet_cluster_by_event.json', 'r') as infile:
     clusters = [JetCluster.from_dict(data) for sol in json.load(infile) for data in sol['events']]
 ```
+
+# Catalog for solar physicists
+
+Finally, we want to create a catalogue that will not need the metadata or the whole suite of functions in the present package, to be read by solar physicists. It will not contain the information about individual classification by the volunteers anymore. To create this catalogue, run the script:
+```python
+python scripts/clusters_to_solarjets_catalog.py
+```
+
+The output is the file `solar_jets.json`. Information on how to open and read this catalog is part of a different package: solarjethunter_catalogue.
 
 # The following notes might be obsolete (cleaning in progress)
 
