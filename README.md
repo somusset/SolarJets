@@ -136,6 +136,10 @@ To run the aggregation, one only need to run the script `scripts/do_aggregation`
 7. Filter the results into jets, defined each by a box and a base point. The result is saved in `jets.json`
 8. Cluster jets from different subjects that are associated with the same original HEK CJ event. The result is saved in `jet_clusters.json`.
 
+```bash
+python scripts/do_aggregation.py
+```
+
 # Outputs
 
 To open the file `jets.json`:
@@ -164,7 +168,7 @@ with open('reductions/jet_cluster_by_event.json', 'r') as infile:
 # Catalog for solar physicists
 
 Finally, we want to create a catalogue that will not need the metadata or the whole suite of functions in the present package, to be read by solar physicists. It will not contain the information about individual classification by the volunteers anymore. To create this catalogue, run the script:
-```python
+```bash
 python scripts/clusters_to_solarjets_catalog.py
 ```
 
